@@ -79,11 +79,34 @@ def tack_show_message_threaded_onto_the_sense_hat_class():
 
 tack_show_message_threaded_onto_the_sense_hat_class()
 hat = SenseHat()
-hat.show_message_threaded('what what')
-while hat.stick.wait_for_event().action != 'pressed':
-    pass
-hat.show_message_threaded('yoyo')
-while hat.stick.wait_for_event().action != 'pressed':
-    pass
-hat.show_message_threaded('')
-print("bye")
+def one():
+    print("one")
+
+def two():
+    print("two")
+
+def three():
+    print("three")
+
+def quit():
+    exit()
+
+options = [
+        {"message": "one", "fun": one}, 
+        {"message": "two", "fun": two}, 
+        {"message": "three", "fun": three},
+        {"message": "quit", "fun": quit}
+        ]
+
+index = 0
+while True:
+    event = hat.stick.wait_for_event()
+    while event.action != 'pressed':
+        event = hat.stick.wait_for_event()
+    if event.direction == "up":
+        index = max(index - 1, 0)
+    elif event.direction == "down":
+        index = min(index + 1, len(options) - 1)
+    elif event.direction == "middle" or event.direction == "right":
+        options[index]["fun"]()
+    hat.show_message_threaded(options[index]["message"])
